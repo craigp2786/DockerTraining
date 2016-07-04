@@ -1,11 +1,11 @@
 FROM ubuntu:14.04
-MAINTAINER Craig
 
+MAINTAINER me
 RUN apt-get update
-RUN apt-get install -y nginx
-RUN echo 'Hi, I am in your container' \
-    >/usr/share/nginx/html/index.html
-
-CMD [ "nginx", "-g", "daemon off;" ]
-
-EXPOSE 80
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q python-all python-pip
+ADD ./webapp/requirements.txt /tmp/requirements.txt
+RUN pip install -qr /tmp/requirements.txt
+ADD ./webapp /opt/webapp/
+WORKDIR /opt/webapp
+EXPOSE 5000
+CMD ["python", "app.py"] 
